@@ -52,6 +52,17 @@ Requires two environment secrets: `SNAPTRADE_CLIENT_ID` and `SNAPTRADE_CONSUMER_
 - **Portfolio Tracker**: Auto-populated from live Wealthsimple positions when connected
 - **Market Terminal**: Stage classifier, macro tables, mixed Chart.js charts with volume + MA overlay
 - **Big Mac Index**: D3.js world map + bar chart, 26 years of data, animated year slider
+- **Terms of Service & Privacy Policy**: Accessible via masthead strip and status bar footer — covers informational-only disclaimer, live trading risk acknowledgment, data storage (localStorage only), no tracking/analytics
+
+## Design
+
+Editorial monochrome (black & white) theme:
+- Pure white backgrounds, near-black typography, hairline borders
+- Black masthead strip at top: "GLOBAL MACRO TERMINAL" + ToS/PP links + date
+- 62px editorial topbar with large bold logo, 3px bottom rule
+- Inverted black status bar at bottom with legal links
+- Data colors: black = positive/BUY, #CC0000 red = negative/SELL
+- Modals: square-cornered with offset shadow (editorial stamp effect)
 
 ## Running
 
