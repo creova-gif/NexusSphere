@@ -54,15 +54,24 @@ Requires two environment secrets: `SNAPTRADE_CLIENT_ID` and `SNAPTRADE_CONSUMER_
 - **Big Mac Index**: D3.js world map + bar chart, 26 years of data, animated year slider
 - **Terms of Service & Privacy Policy**: Accessible via masthead strip and status bar footer — covers informational-only disclaimer, live trading risk acknowledgment, data storage (localStorage only), no tracking/analytics
 
-## Design
+## Design — Dark Ivory Theme
 
-Editorial monochrome (black & white) theme:
-- Pure white backgrounds, near-black typography, hairline borders
-- Black masthead strip at top: "GLOBAL MACRO TERMINAL" + ToS/PP links + date
-- 62px editorial topbar with large bold logo, 3px bottom rule
-- Inverted black status bar at bottom with legal links
-- Data colors: black = positive/BUY, #CC0000 red = negative/SELL
-- Modals: square-cornered with offset shadow (editorial stamp effect)
+Luxury wealth management terminal (Bloomberg × private banking aesthetic):
+- **Font stack**: Playfair Display serif (logo/headings), Barlow Condensed (display), Barlow (body), JetBrains Mono (data)
+- **Surfaces**: `#111111` obsidian → `#181818` → `#1E1E1E` → `#252525` → `#2E2E2E` → `#383838`
+- **Text**: `#F2F0EB` pearl primary → `#A89F8C` warm secondary → `#665E50` tertiary
+- **Buy / positive**: `#D4AF37` soft gold with `0 0 14px rgba(212,175,55,.28)` glow
+- **Sell / negative**: `#E11D48` rose with `0 0 14px rgba(225,29,72,.28)` glow
+- **AI accent**: `#C8A84B` amber with `0 0 24px rgba(200,168,75,.14)` glow (always alive, never distracting)
+- **Borders**: rgba(255,255,255,.04/.08/.14) luminous hairlines on dark
+- **Masthead strip**: `#0A0A0A` pure black with `rgba(212,175,55,.15)` gold bottom border
+- **Topbar**: `#181818` with gold bottom separator, Playfair Display logo, gold "SPHERE" em
+- **Tab active**: gold underline (not white)
+- **Status bar**: pure black floor with gold data values
+- **Loader**: obsidian field, Playfair Display serif logo, gold progress bar
+- **Modals**: dark surface with gold border hairline, soft drop shadow
+- **Legal modals**: gold "CLOSE" button, gold section headers
+- BigMac tab: starts in dark mode by default
 
 ## Running
 
