@@ -27,13 +27,19 @@ def nocache_file(path):
         resp.headers['Expires'] = '0'
         return resp
     except FileNotFoundError:
-        log.error(f"File not found: {path}")
         return make_response(f"<h1>File not found: {path}</h1>", 404)
     except Exception as e:
         log.error(f"Error serving {path}: {e}")
-        return make_response(f"<h1>Server error</h1>", 500)
+        return make_response("<h1>Server error</h1>", 500)
 
-# ── App routes ───────────────────────────────────────────────────────────────
+def snap_err(e):
+    log.error(f"SnapTrade error: {e}")
+    if isinstance(e, st.ApiException):
+        body = e.body if isinstance(e.body, dict) else {'error': str(e.body)[:300]}
+        return jsonify(body), e.status
+    return jsonify({'error': str(e)[:300]}), 500
+
+# ── App routes ────────────────────────────────────────────────────────────────
 
 @app.route('/')
 def nexussphere():
@@ -55,7 +61,7 @@ def favicon():
 def snap_callback():
     return nocache_file('static_nexussphere.html')
 
-# ── SnapTrade proxy API ──────────────────────────────────────────────────────
+# ── SnapTrade auth & portfolio proxy ─────────────────────────────────────────
 
 @app.route('/api/snap/status')
 def snap_status():
@@ -68,98 +74,71 @@ def snap_register():
     client = get_snap_client()
     if not client:
         return jsonify({'error': 'SnapTrade not configured'}), 503
-
     data = request.get_json(silent=True) or {}
     user_id = data.get('userId', '').strip()
     if not user_id:
         return jsonify({'error': 'userId required'}), 400
-
     try:
         resp = client.authentication.register_snap_trade_user(user_id=user_id)
         return jsonify(resp.body)
-    except st.ApiException as e:
-        log.error(f"SnapTrade register error: {e.status} {e.body}")
-        body = e.body if isinstance(e.body, dict) else {'error': str(e.body)[:200]}
-        return jsonify(body), e.status
     except Exception as e:
-        log.error(f"SnapTrade register exception: {e}")
-        return jsonify({'error': str(e)[:200]}), 500
+        return snap_err(e)
 
 @app.route('/api/snap/connect', methods=['POST'])
 def snap_connect():
     client = get_snap_client()
     if not client:
         return jsonify({'error': 'SnapTrade not configured'}), 503
-
     data = request.get_json(silent=True) or {}
     user_id = data.get('userId', '').strip()
     user_secret = data.get('userSecret', '').strip()
     broker = data.get('broker', 'WEALTHSIMPLE').strip()
-
     if not user_id or not user_secret:
         return jsonify({'error': 'userId and userSecret required'}), 400
-
     domains = os.environ.get('REPLIT_DOMAINS', '')
     domain = domains.split(',')[0].strip() if domains else ''
-    callback = f'https://{domain}/snap-callback' if domain else ''
-
+    callback = f'https://{domain}/snap-callback' if domain else None
     try:
         resp = client.authentication.login_snap_trade_user(
-            user_id=user_id,
-            user_secret=user_secret,
-            broker=broker,
-            immediate_redirect=False,
-            custom_redirect=callback or None
+            user_id=user_id, user_secret=user_secret,
+            broker=broker, immediate_redirect=False,
+            custom_redirect=callback
         )
         return jsonify(resp.body)
-    except st.ApiException as e:
-        log.error(f"SnapTrade connect error: {e.status} {e.body}")
-        body = e.body if isinstance(e.body, dict) else {'error': str(e.body)[:200]}
-        return jsonify(body), e.status
     except Exception as e:
-        log.error(f"SnapTrade connect exception: {e}")
-        return jsonify({'error': str(e)[:200]}), 500
+        return snap_err(e)
 
 @app.route('/api/snap/accounts')
 def snap_accounts():
     client = get_snap_client()
     if not client:
         return jsonify({'error': 'SnapTrade not configured'}), 503
-
     uid = request.args.get('userId', '').strip()
     usec = request.args.get('userSecret', '').strip()
     try:
         resp = client.account_information.list_user_accounts(user_id=uid, user_secret=usec)
         return jsonify(resp.body)
-    except st.ApiException as e:
-        body = e.body if isinstance(e.body, dict) else {'error': str(e.body)[:200]}
-        return jsonify(body), e.status
     except Exception as e:
-        return jsonify({'error': str(e)[:200]}), 500
+        return snap_err(e)
 
 @app.route('/api/snap/positions')
 def snap_positions():
     client = get_snap_client()
     if not client:
         return jsonify({'error': 'SnapTrade not configured'}), 503
-
     uid = request.args.get('userId', '').strip()
     usec = request.args.get('userSecret', '').strip()
     try:
         resp = client.account_information.get_all_user_holdings(user_id=uid, user_secret=usec)
         return jsonify(resp.body)
-    except st.ApiException as e:
-        body = e.body if isinstance(e.body, dict) else {'error': str(e.body)[:200]}
-        return jsonify(body), e.status
     except Exception as e:
-        return jsonify({'error': str(e)[:200]}), 500
+        return snap_err(e)
 
 @app.route('/api/snap/balances')
 def snap_balances():
     client = get_snap_client()
     if not client:
         return jsonify({'error': 'SnapTrade not configured'}), 503
-
     uid = request.args.get('userId', '').strip()
     usec = request.args.get('userSecret', '').strip()
     acct_id = request.args.get('accountId', '').strip()
@@ -170,18 +149,14 @@ def snap_balances():
         else:
             resp = client.account_information.list_user_accounts(user_id=uid, user_secret=usec)
         return jsonify(resp.body)
-    except st.ApiException as e:
-        body = e.body if isinstance(e.body, dict) else {'error': str(e.body)[:200]}
-        return jsonify(body), e.status
     except Exception as e:
-        return jsonify({'error': str(e)[:200]}), 500
+        return snap_err(e)
 
 @app.route('/api/snap/activities')
 def snap_activities():
     client = get_snap_client()
     if not client:
         return jsonify({'error': 'SnapTrade not configured'}), 503
-
     uid = request.args.get('userId', '').strip()
     usec = request.args.get('userSecret', '').strip()
     start = request.args.get('startDate', '')
@@ -191,11 +166,190 @@ def snap_activities():
             kwargs['start_date'] = start
         resp = client.transactions_and_reporting.get_activities(**kwargs)
         return jsonify(resp.body)
-    except st.ApiException as e:
-        body = e.body if isinstance(e.body, dict) else {'error': str(e.body)[:200]}
-        return jsonify(body), e.status
     except Exception as e:
-        return jsonify({'error': str(e)[:200]}), 500
+        return snap_err(e)
+
+# ── SnapTrade symbol search ───────────────────────────────────────────────────
+
+@app.route('/api/snap/symbols')
+def snap_symbols():
+    client = get_snap_client()
+    if not client:
+        return jsonify({'error': 'SnapTrade not configured'}), 503
+    query = request.args.get('q', '').strip()
+    uid = request.args.get('userId', '').strip()
+    usec = request.args.get('userSecret', '').strip()
+    acct_id = request.args.get('accountId', '').strip()
+    if not query:
+        return jsonify([])
+    try:
+        if uid and usec and acct_id:
+            resp = client.reference_data.symbol_search_user_account(
+                user_id=uid, user_secret=usec,
+                account_id=acct_id, substring=query)
+        else:
+            resp = client.reference_data.get_symbols(substring=query)
+        results = resp.body if isinstance(resp.body, list) else []
+        filtered = [r for r in results if r.get('exchange', {}).get('code') in ('NASDAQ','NYSE','TSX','ARCA')]
+        return jsonify(filtered[:10])
+    except Exception as e:
+        return snap_err(e)
+
+# ── SnapTrade trading ─────────────────────────────────────────────────────────
+
+@app.route('/api/snap/order/impact', methods=['POST'])
+def snap_order_impact():
+    """Preview an order — returns estimated cost, units, trade_id for confirmation."""
+    client = get_snap_client()
+    if not client:
+        return jsonify({'error': 'SnapTrade not configured'}), 503
+    data = request.get_json(silent=True) or {}
+    uid = data.get('userId', '').strip()
+    usec = data.get('userSecret', '').strip()
+    acct_id = data.get('accountId', '').strip()
+    action = data.get('action', 'BUY')
+    order_type = data.get('orderType', 'Market')
+    symbol_id = data.get('symbolId', '').strip()
+    units = data.get('units')
+    price = data.get('price')
+    tif = data.get('timeInForce', 'Day')
+
+    # Safety guardrails
+    if units and float(units) <= 0:
+        return jsonify({'error': 'Units must be positive'}), 400
+
+    try:
+        kwargs = dict(
+            user_id=uid, user_secret=usec,
+            account_id=acct_id, action=action,
+            order_type=order_type, time_in_force=tif,
+            universal_symbol_id=symbol_id,
+            units=float(units) if units else None,
+        )
+        if price:
+            kwargs['price'] = float(price)
+        resp = client.trading.get_order_impact(**kwargs)
+        return jsonify(resp.body)
+    except Exception as e:
+        return snap_err(e)
+
+@app.route('/api/snap/order/place', methods=['POST'])
+def snap_order_place():
+    """Confirm and place a previewed order using trade_id."""
+    client = get_snap_client()
+    if not client:
+        return jsonify({'error': 'SnapTrade not configured'}), 503
+    data = request.get_json(silent=True) or {}
+    uid = data.get('userId', '').strip()
+    usec = data.get('userSecret', '').strip()
+    trade_id = data.get('tradeId', '').strip()
+    if not trade_id:
+        return jsonify({'error': 'tradeId required'}), 400
+    try:
+        resp = client.trading.place_order(
+            user_id=uid, user_secret=usec,
+            trade_id=trade_id, wait_to_confirm=True
+        )
+        log.info(f"Order placed: {data.get('action')} {data.get('symbolId')} by {uid}")
+        return jsonify(resp.body)
+    except Exception as e:
+        return snap_err(e)
+
+@app.route('/api/snap/order/force', methods=['POST'])
+def snap_order_force():
+    """Place an order directly without preview (market orders only)."""
+    client = get_snap_client()
+    if not client:
+        return jsonify({'error': 'SnapTrade not configured'}), 503
+    data = request.get_json(silent=True) or {}
+    uid = data.get('userId', '').strip()
+    usec = data.get('userSecret', '').strip()
+    acct_id = data.get('accountId', '').strip()
+    action = data.get('action', 'BUY')
+    order_type = data.get('orderType', 'Market')
+    symbol_id = data.get('symbolId', '').strip()
+    units = data.get('units')
+    price = data.get('price')
+    tif = data.get('timeInForce', 'Day')
+
+    if units and float(units) <= 0:
+        return jsonify({'error': 'Units must be positive'}), 400
+
+    try:
+        kwargs = dict(
+            user_id=uid, user_secret=usec,
+            account_id=acct_id, action=action,
+            order_type=order_type, time_in_force=tif,
+            universal_symbol_id=symbol_id,
+            units=float(units) if units else None,
+        )
+        if price:
+            kwargs['price'] = float(price)
+        resp = client.trading.place_force_order(**kwargs)
+        log.info(f"Force order placed: {action} {symbol_id} {units} by {uid}")
+        return jsonify(resp.body)
+    except Exception as e:
+        return snap_err(e)
+
+@app.route('/api/snap/order/cancel', methods=['POST'])
+def snap_order_cancel():
+    client = get_snap_client()
+    if not client:
+        return jsonify({'error': 'SnapTrade not configured'}), 503
+    data = request.get_json(silent=True) or {}
+    uid = data.get('userId', '').strip()
+    usec = data.get('userSecret', '').strip()
+    acct_id = data.get('accountId', '').strip()
+    brokerage_order_id = data.get('brokerageOrderId', '').strip()
+    if not brokerage_order_id:
+        return jsonify({'error': 'brokerageOrderId required'}), 400
+    try:
+        resp = client.trading.cancel_user_account_order(
+            user_id=uid, user_secret=usec,
+            account_id=acct_id,
+            brokerage_order_id=brokerage_order_id
+        )
+        return jsonify(resp.body if resp.body else {'status': 'cancelled'})
+    except Exception as e:
+        return snap_err(e)
+
+@app.route('/api/snap/orders')
+def snap_orders():
+    client = get_snap_client()
+    if not client:
+        return jsonify({'error': 'SnapTrade not configured'}), 503
+    uid = request.args.get('userId', '').strip()
+    usec = request.args.get('userSecret', '').strip()
+    acct_id = request.args.get('accountId', '').strip()
+    state = request.args.get('state', 'all')
+    try:
+        resp = client.account_information.get_user_account_orders(
+            user_id=uid, user_secret=usec,
+            account_id=acct_id, state=state
+        )
+        return jsonify(resp.body)
+    except Exception as e:
+        return snap_err(e)
+
+@app.route('/api/snap/quote')
+def snap_quote():
+    client = get_snap_client()
+    if not client:
+        return jsonify({'error': 'SnapTrade not configured'}), 503
+    uid = request.args.get('userId', '').strip()
+    usec = request.args.get('userSecret', '').strip()
+    acct_id = request.args.get('accountId', '').strip()
+    symbols = request.args.get('symbols', '').strip()
+    if not symbols or not acct_id:
+        return jsonify({'error': 'symbols and accountId required'}), 400
+    try:
+        resp = client.trading.get_user_account_quotes(
+            user_id=uid, user_secret=usec,
+            account_id=acct_id, symbols=symbols
+        )
+        return jsonify(resp.body)
+    except Exception as e:
+        return snap_err(e)
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
