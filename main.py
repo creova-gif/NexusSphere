@@ -1,14 +1,25 @@
-from flask import Flask, send_file, redirect
+from flask import Flask, make_response
 
 app = Flask(__name__)
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+
+def nocache_file(path):
+    with open(path, 'rb') as f:
+        content = f.read()
+    resp = make_response(content)
+    resp.headers['Content-Type'] = 'text/html; charset=utf-8'
+    resp.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    resp.headers['Pragma'] = 'no-cache'
+    resp.headers['Expires'] = '0'
+    return resp
 
 @app.route('/')
 def nexussphere():
-    return send_file('static_nexussphere.html')
+    return nocache_file('static_nexussphere.html')
 
 @app.route('/bigmac')
 def bigmac():
-    return send_file('static_bigmac.html')
+    return nocache_file('static_bigmac.html')
 
 @app.route('/health')
 def health():
