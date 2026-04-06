@@ -14,7 +14,7 @@ A two-page financial intelligence application served via Flask. Features live We
 
 - **Backend**: Flask (Python), `main.py` on port 5000
 - **Frontend**: Two standalone HTML files, each self-contained with embedded CSS, JS, Chart.js, D3.js, TopoJSON
-  - `static_nexussphere.html` — NexusSphere terminal (~10,600 lines)
+  - `static_nexussphere.html` — NexusSphere terminal (~16,500 lines)
   - `static_bigmac.html` — Big Mac Index explorer
 
 ## SnapTrade Integration (Wealthsimple Live Trading)
@@ -51,10 +51,15 @@ Requires two environment secrets: `SNAPTRADE_CLIENT_ID` and `SNAPTRADE_CONSUMER_
 - **AI Assistant tab**: Personal TFSA advice for AMD/TSM/ORCL/PANW/PLTR/ENB holdings + AI chat
 - **Portfolio Tracker**: Deep Dive sub-nav (Overview | ACB & Tax | Rebalancing | P&L Deep Dive); ACB tracking, TFSA room tracker, capital gains simulator, drift-based rebalancing engine, benchmark P&L chart
 - **Market Terminal**: Stage classifier, macro tables, mixed Chart.js charts with volume + MA overlay
-- **Stock Screener**: Finviz-style 50-stock table/heatmap (TSX + US), 10 filters, sortable 17-column table, BUY action
+- **Stock Screener**: Comprehensive Finviz-replacement. 75+ stocks (TSX/TSX-V/US/INTL). 24 filters (market, sector, MCap, P/E, RSI, dividend, beta, SMA, industry, country, index, price range, avg vol, theme, earnings date, float). 5 colsets (Overview/Technical/Financial/Fundamentals/Ownership). 11 views (Table, Heatmap, Sectors, Insider, ETF, Snapshot, News, Calendar, Stats, Managers, Funds). 19 presets. INDEX_MEMBERS (S&P500/NASDAQ100/TSX60/Dow30) and THEME_MEMBERS (AI/cloud/cyber/chips/EV/biotech/gold/dividend) lookup tables.
 - **Path of Price — Charts**: Interactive price chart with Bollinger Bands, SMA 50/200, VWAP; RSI panel, MACD panel; 11 tickers, 5 timeframes; real-time signal bar (RSI/MACD/BB%/VWAP)
 - **News & Sentiment**: 25+ stories; CANADA, TECH, MY HOLDINGS filters; List + Heatmap views; impact badges; clickable ticker links → Charts
-- **Quant Models**: 10 models (DCF, CAPM, Black-Scholes, Monte Carlo, Factor, Kelly, Regime…) + ⭐ TFSA Signals view with momentum/mean-reversion/sentiment composite scoring for all 6 holdings
+- **Quant Models**: 16 models — DCF, CAPM, Black-Scholes, Monte Carlo, Factor (FF5), Kelly Criterion, Regime Classifier, Backtester, Technicals, Risk Metrics, TFSA Signals, DDM, Graham Number, Altman Z-Score, Piotroski F-Score, Efficient Frontier
+- **Tools**: 6 calculators — Compound Interest, DCA (Dollar-Cost Averaging), RRSP room calculator, Options P&L (payoff at expiry), Inflation-Adjusted Real Return, Bond Yield (YTM + duration)
+- **Goals & Planning**: Goal tracker + CPP/OAS estimator, TFSA vs RRSP vs FHSA optimizer, cash flow planner
+- **Tax**: ACB tracker, superficial loss detector, T5008/T5 slip estimator, FHSA room tracker
+- **Sandbox**: Trade simulator, macro scenario builder (rate/oil/USD-CAD shocks), side-by-side portfolio compare
+- **Global**: CMD+K global search, keyboard navigation, notification center, VaR/CVaR with 6 stress scenarios
 - **Big Mac Index**: D3.js world map + bar chart, 26 years of data, animated year slider
 - **Terms of Service & Privacy Policy**: Accessible via masthead strip and status bar footer
 
