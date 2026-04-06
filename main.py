@@ -1,7 +1,6 @@
 from flask import Flask, make_response, request, jsonify
 import os
 import logging
-import snaptrade_client as st
 
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
@@ -9,7 +8,20 @@ log = logging.getLogger(__name__)
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
+# ── Lazy SnapTrade import ─────────────────────────────────────────────────────
+# snaptrade_client takes ~6 seconds to import. We defer it until the first API
+# call so Flask is ready to serve health checks and pages immediately on start.
+_st = None
+
+def _get_st():
+    global _st
+    if _st is None:
+        import snaptrade_client as st
+        _st = st
+    return _st
+
 def get_snap_client():
+    st = _get_st()
     cid = os.environ.get('SNAPTRADE_CLIENT_ID', '').strip()
     ckey = os.environ.get('SNAPTRADE_CONSUMER_KEY', '').strip()
     if not cid or not ckey:
@@ -33,6 +45,7 @@ def nocache_file(path):
         return make_response("<h1>Server error</h1>", 500)
 
 def snap_err(e):
+    st = _get_st()
     log.error(f"SnapTrade error: {e}")
     if isinstance(e, st.ApiException):
         body = e.body if isinstance(e.body, dict) else {'error': str(e.body)[:300]}
@@ -214,7 +227,6 @@ def snap_order_impact():
     price = data.get('price')
     tif = data.get('timeInForce', 'Day')
 
-    # Safety guardrails
     if units and float(units) <= 0:
         return jsonify({'error': 'Units must be positive'}), 400
 
