@@ -49,10 +49,14 @@ Requires two environment secrets: `SNAPTRADE_CLIENT_ID` and `SNAPTRADE_CONSUMER_
 
 - **Trading Engine tab**: Live Wealthsimple order ticket, auto-strategy rules engine, DCA scheduler, live order history
 - **AI Assistant tab**: Personal TFSA advice for AMD/TSM/ORCL/PANW/PLTR/ENB holdings + AI chat
-- **Portfolio Tracker**: Auto-populated from live Wealthsimple positions when connected
+- **Portfolio Tracker**: Deep Dive sub-nav (Overview | ACB & Tax | Rebalancing | P&L Deep Dive); ACB tracking, TFSA room tracker, capital gains simulator, drift-based rebalancing engine, benchmark P&L chart
 - **Market Terminal**: Stage classifier, macro tables, mixed Chart.js charts with volume + MA overlay
+- **Stock Screener**: Finviz-style 50-stock table/heatmap (TSX + US), 10 filters, sortable 17-column table, BUY action
+- **Path of Price — Charts**: Interactive price chart with Bollinger Bands, SMA 50/200, VWAP; RSI panel, MACD panel; 11 tickers, 5 timeframes; real-time signal bar (RSI/MACD/BB%/VWAP)
+- **News & Sentiment**: 25+ stories; CANADA, TECH, MY HOLDINGS filters; List + Heatmap views; impact badges; clickable ticker links → Charts
+- **Quant Models**: 10 models (DCF, CAPM, Black-Scholes, Monte Carlo, Factor, Kelly, Regime…) + ⭐ TFSA Signals view with momentum/mean-reversion/sentiment composite scoring for all 6 holdings
 - **Big Mac Index**: D3.js world map + bar chart, 26 years of data, animated year slider
-- **Terms of Service & Privacy Policy**: Accessible via masthead strip and status bar footer — covers informational-only disclaimer, live trading risk acknowledgment, data storage (localStorage only), no tracking/analytics
+- **Terms of Service & Privacy Policy**: Accessible via masthead strip and status bar footer
 
 ## Design — Dark Ivory Theme
 
