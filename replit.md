@@ -6,7 +6,7 @@ A two-page financial intelligence application served via Flask. Features live We
 
 ## Routes
 
-- `/` — NexusSphere Global Macro Terminal: full-featured financial terminal with market cycle engine, portfolio tracker, news & sentiment, risk analytics, tax/performance, goals, sandbox, earnings, quant models, prediction market bot, trading engine, and an embedded Big Mac Index tab.
+- `/` — NexusSphere Global Macro Terminal: full-featured financial terminal with market cycle engine, portfolio tracker, news & sentiment, risk analytics, tax/performance, goals, sandbox, earnings, quant models, prediction market bot, trading engine, stock screener (Finviz-style TSX + US), and an embedded Big Mac Index tab.
 - `/bigmac` — Standalone Big Mac Index Currency Valuation Explorer with interactive world map, bar chart view, trend comparisons, and country rankings.
 - `/snap-callback` — SnapTrade OAuth callback (redirects back to the app after broker login).
 
