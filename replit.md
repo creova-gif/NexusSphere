@@ -14,7 +14,7 @@ A two-page financial intelligence application served via Flask. Features live We
 
 - **Backend**: Flask (Python), `main.py` on port 5000
 - **Frontend**: Two standalone HTML files, each self-contained with embedded CSS, JS, Chart.js, D3.js, TopoJSON
-  - `static_nexussphere.html` — NexusSphere terminal (~16,500 lines)
+  - `static_nexussphere.html` — NexusSphere terminal (~17,150 lines)
   - `static_bigmac.html` — Big Mac Index explorer
 
 ## SnapTrade Integration (Wealthsimple Live Trading)
@@ -47,7 +47,9 @@ Requires two environment secrets: `SNAPTRADE_CLIENT_ID` and `SNAPTRADE_CONSUMER_
 
 ## Features
 
-- **Trading Engine tab**: Live Wealthsimple order ticket, auto-strategy rules engine, DCA scheduler, live order history
+- **Trading Engine tab**: 9 sub-tabs — Dashboard, Intraday, Live News, Signals, Adv Models, AI Assistant, Execution (order ticket + DCA), L2 Order Book, Trade Blotter, Journal, Canadian
+  - **L2 Order Book**: 10-level bid/ask depth ladder with proportional depth bars, center spread/imbalance panel, 22-row time & sales tape, real bid/ask from SnapTrade quote, auto-refresh every 2s, 12-ticker selector
+  - **Trade Blotter**: Full order history table (9 columns), status/symbol filters, summary stats bar, CSV export, auto-refresh every 30s
 - **AI Assistant tab**: Personal TFSA advice for AMD/TSM/ORCL/PANW/PLTR/ENB holdings + AI chat
 - **Portfolio Tracker**: Deep Dive sub-nav (Overview | ACB & Tax | Rebalancing | P&L Deep Dive); ACB tracking, TFSA room tracker, capital gains simulator, drift-based rebalancing engine, benchmark P&L chart
 - **Market Terminal**: Stage classifier, macro tables, mixed Chart.js charts with volume + MA overlay
@@ -60,6 +62,7 @@ Requires two environment secrets: `SNAPTRADE_CLIENT_ID` and `SNAPTRADE_CONSUMER_
 - **Tax**: ACB tracker, superficial loss detector, T5008/T5 slip estimator, FHSA room tracker
 - **Sandbox**: Trade simulator, macro scenario builder (rate/oil/USD-CAD shocks), side-by-side portfolio compare
 - **Global**: CMD+K global search, keyboard navigation, notification center, VaR/CVaR with 6 stress scenarios
+- **Global Macro Map**: New full-page D3 choropleth with 7 data layers — GDP Growth, Inflation, Interest Rates, Equity YTD, FX vs USD, Market Hours (real-time open/closed/pre-post per exchange), and Trade Flows (14 animated arcs between G20 nations). 30-country dataset. Country click → sliding detail panel with macro stats and exchange info.
 - **Big Mac Index**: D3.js world map + bar chart, 26 years of data, animated year slider
 - **Terms of Service & Privacy Policy**: Accessible via masthead strip and status bar footer
 
