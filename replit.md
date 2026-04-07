@@ -14,7 +14,7 @@ A two-page financial intelligence application served via Flask. Features live We
 
 - **Backend**: Flask (Python), `main.py` on port 5000
 - **Frontend**: Two standalone HTML files, each self-contained with embedded CSS, JS, Chart.js, D3.js, TopoJSON
-  - `static_nexussphere.html` — NexusSphere terminal (~19,900 lines)
+  - `static_nexussphere.html` — NexusSphere terminal (~21,600 lines)
   - `static_bigmac.html` — Big Mac Index explorer
 
 ## SnapTrade Integration (Wealthsimple Live Trading)
@@ -51,7 +51,7 @@ Requires two environment secrets: `SNAPTRADE_CLIENT_ID` and `SNAPTRADE_CONSUMER_
   - **L2 Order Book**: 10-level bid/ask depth ladder with proportional depth bars, center spread/imbalance panel, 22-row time & sales tape, real bid/ask from SnapTrade quote, auto-refresh every 2s, 12-ticker selector
   - **Trade Blotter**: Full order history table (9 columns), status/symbol filters, summary stats bar, CSV export, auto-refresh every 30s
 - **AI Assistant tab**: Personal TFSA advice for AMD/TSM/ORCL/PANW/PLTR/ENB holdings + AI chat
-- **Portfolio Tracker**: Deep Dive sub-nav (Overview | ACB & Tax | Rebalancing | P&L Deep Dive); ACB tracking, TFSA room tracker, capital gains simulator, drift-based rebalancing engine, benchmark P&L chart
+- **Portfolio Tracker**: Deep Dive sub-nav (Overview | ACB & Tax | Rebalancing | P&L Deep Dive | Fundamentals); ACB tracking, TFSA room tracker, capital gains simulator, drift-based rebalancing engine, benchmark P&L chart; Fundamentals tab with P/E comparison bars, analyst target bar chart, quality score cards (profitability/growth/safety), dividend income analysis for all 7 holdings
 - **Market Terminal**: Stage classifier, macro tables, mixed Chart.js charts with volume + MA overlay
 - **Stock Screener**: Comprehensive Finviz-replacement. 75+ stocks (TSX/TSX-V/US/INTL). 24 filters (market, sector, MCap, P/E, RSI, dividend, beta, SMA, industry, country, index, price range, avg vol, theme, earnings date, float). 5 colsets (Overview/Technical/Financial/Fundamentals/Ownership). 11 views (Table, Heatmap, Sectors, Insider, ETF, Snapshot, News, Calendar, Stats, Managers, Funds). 19 presets. INDEX_MEMBERS (S&P500/NASDAQ100/TSX60/Dow30) and THEME_MEMBERS (AI/cloud/cyber/chips/EV/biotech/gold/dividend) lookup tables.
 - **Path of Price — Charts**: Interactive price chart with Bollinger Bands, SMA 50/200, VWAP; RSI panel, MACD panel; 11 tickers, 5 timeframes; real-time signal bar (RSI/MACD/BB%/VWAP)
