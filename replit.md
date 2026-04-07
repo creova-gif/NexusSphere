@@ -1,4 +1,4 @@
-# NexusSphere — Global Macro Terminal v4
+# NexusSphere — Global Macro Terminal v5
 
 ## Overview
 
@@ -14,7 +14,7 @@ A two-page financial intelligence application served via Flask. Features live We
 
 - **Backend**: Flask (Python), `main.py` on port 5000
 - **Frontend**: Two standalone HTML files, each self-contained with embedded CSS, JS, Chart.js, D3.js, TopoJSON
-  - `static_nexussphere.html` — NexusSphere terminal (~21,600 lines)
+  - `static_nexussphere.html` — NexusSphere terminal (~23,000 lines)
   - `static_bigmac.html` — Big Mac Index explorer
 
 ## SnapTrade Integration (Wealthsimple Live Trading)
