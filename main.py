@@ -2,6 +2,30 @@ from flask import Flask, make_response, request, jsonify
 import os
 import logging
 
+# ── Lazy AI client imports ─────────────────────────────────────────────────────
+_openai_client = None
+_anthropic_client = None
+
+def _get_openai():
+    global _openai_client
+    if _openai_client is None:
+        from openai import OpenAI
+        _openai_client = OpenAI(
+            base_url=os.environ.get('AI_INTEGRATIONS_OPENAI_BASE_URL'),
+            api_key=os.environ.get('AI_INTEGRATIONS_OPENAI_API_KEY'),
+        )
+    return _openai_client
+
+def _get_anthropic():
+    global _anthropic_client
+    if _anthropic_client is None:
+        import anthropic
+        _anthropic_client = anthropic.Anthropic(
+            base_url=os.environ.get('AI_INTEGRATIONS_ANTHROPIC_BASE_URL'),
+            api_key=os.environ.get('AI_INTEGRATIONS_ANTHROPIC_API_KEY'),
+        )
+    return _anthropic_client
+
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
 
@@ -362,6 +386,125 @@ def snap_quote():
         return jsonify(resp.body)
     except Exception as e:
         return snap_err(e)
+
+# ── AI Proxy Routes ───────────────────────────────────────────────────────────
+
+# Model names confirmed working with Replit AI Integrations
+_CLAUDE_MODEL = 'claude-sonnet-4-5'
+_OPENAI_MODEL = 'gpt-4o'
+
+@app.route('/api/ai/claude', methods=['POST'])
+def ai_claude():
+    """Proxy Claude (Anthropic) requests through Replit AI Integration."""
+    data = request.get_json(silent=True) or {}
+    messages = data.get('messages', [])
+    max_tokens = int(data.get('max_tokens', 800))
+    system_msg = data.get('system', '')
+
+    if not messages:
+        return jsonify({'error': 'messages required'}), 400
+
+    try:
+        client = _get_anthropic()
+        kwargs = dict(
+            model=_CLAUDE_MODEL,
+            max_tokens=max_tokens,
+            messages=messages,
+        )
+        if system_msg:
+            kwargs['system'] = system_msg
+
+        response = client.messages.create(**kwargs)
+        # Return in same format as the Anthropic REST API so frontend parsing is unchanged
+        return jsonify({
+            'id': response.id,
+            'type': 'message',
+            'role': 'assistant',
+            'content': [{'type': 'text', 'text': response.content[0].text}],
+            'model': response.model,
+            'stop_reason': response.stop_reason,
+            'usage': {
+                'input_tokens': response.usage.input_tokens,
+                'output_tokens': response.usage.output_tokens,
+            }
+        })
+    except Exception as e:
+        log.error(f"Claude API error: {e}")
+        return jsonify({'error': str(e)[:500]}), 500
+
+
+@app.route('/api/ai/openai', methods=['POST'])
+def ai_openai():
+    """Proxy OpenAI requests through Replit AI Integration."""
+    data = request.get_json(silent=True) or {}
+    messages = data.get('messages', [])
+    max_tokens = int(data.get('max_tokens', 800))
+    system_msg = data.get('system', '')
+
+    if not messages:
+        return jsonify({'error': 'messages required'}), 400
+
+    try:
+        client = _get_openai()
+        full_messages = []
+        if system_msg:
+            full_messages.append({'role': 'system', 'content': system_msg})
+        full_messages.extend(messages)
+
+        response = client.chat.completions.create(
+            model=_OPENAI_MODEL,
+            max_tokens=max_tokens,
+            messages=full_messages,
+        )
+        text = response.choices[0].message.content
+        # Return in Anthropic-compatible format so frontend works with both
+        return jsonify({
+            'content': [{'type': 'text', 'text': text}],
+            'model': response.model,
+            'usage': {
+                'input_tokens': response.usage.prompt_tokens,
+                'output_tokens': response.usage.completion_tokens,
+            }
+        })
+    except Exception as e:
+        log.error(f"OpenAI API error: {e}")
+        return jsonify({'error': str(e)[:500]}), 500
+
+
+@app.route('/api/ai/news-summary', methods=['POST'])
+def ai_news_summary():
+    """Summarize a list of news headlines and return market sentiment."""
+    data = request.get_json(silent=True) or {}
+    headlines = data.get('headlines', [])
+    symbol = data.get('symbol', 'the market')
+
+    if not headlines:
+        return jsonify({'error': 'headlines required'}), 400
+
+    prompt = (
+        f"You are a market analyst. Given these recent news headlines for {symbol}, "
+        f"provide a concise 2-3 sentence summary of the key narrative and overall sentiment. "
+        f"Then give a JSON object with keys: summary (string), sentiment (bullish/bearish/neutral), "
+        f"confidence (0-1).\n\nHeadlines:\n" + '\n'.join(f'- {h}' for h in headlines[:15]) +
+        "\n\nRespond ONLY with JSON, no markdown."
+    )
+
+    try:
+        client = _get_openai()
+        response = client.chat.completions.create(
+            model=_OPENAI_MODEL,
+            max_tokens=300,
+            messages=[{'role': 'user', 'content': prompt}],
+        )
+        text = response.choices[0].message.content.strip()
+        text = text.replace('```json', '').replace('```', '').strip()
+        import json
+        parsed = json.loads(text)
+        return jsonify({'success': True, 'data': parsed})
+    except Exception as e:
+        log.error(f"News summary error: {e}")
+        return jsonify({'error': str(e)[:500]}), 500
+
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))

@@ -17,6 +17,23 @@ A two-page financial intelligence application served via Flask. Features live We
   - `static_nexussphere.html` — NexusSphere terminal (~23,000 lines)
   - `static_bigmac.html` — Big Mac Index explorer
 
+## AI Integration (OpenAI + Claude via Replit)
+
+Both OpenAI and Anthropic (Claude) are connected via Replit AI Integrations — no user API keys required, billed to Replit credits. Models confirmed working: `claude-sonnet-4-5` (Anthropic) and `gpt-4o` (OpenAI).
+
+### Backend AI proxy routes (all in `main.py`):
+| Route | Method | Purpose |
+|---|---|---|
+| `/api/ai/claude` | POST | Proxy to Claude — accepts `{messages, max_tokens, system}`; returns Anthropic-format `{content:[{text}]}` |
+| `/api/ai/openai` | POST | Proxy to GPT-4o — same body format, same response shape |
+| `/api/ai/news-summary` | POST | Summarize headlines for a symbol; returns `{summary, sentiment, confidence}` |
+
+All frontend calls route through these proxies. The following functions call `/api/ai/claude`:
+- `pmCallClaudeForProbability()` — prediction market probability engine
+- PM research pipeline — market research brief generator
+- `aiChatWithClaude()` — trade journal AI coach
+- `aiReviewTrade()` — per-trade AI review
+
 ## SnapTrade Integration (Wealthsimple Live Trading)
 
 Requires two environment secrets: `SNAPTRADE_CLIENT_ID` and `SNAPTRADE_CONSUMER_KEY` (from app.snaptrade.com).
