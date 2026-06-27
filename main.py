@@ -32,6 +32,17 @@ log = logging.getLogger(__name__)
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
+@app.after_request
+def add_cors(response):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
+    response.headers['Access-Control-Allow-Methods'] = 'GET,POST,OPTIONS'
+    return response
+
+def _safe_err(msg):
+    """Return a generic error message for user-facing responses."""
+    return str(msg)[:200] if msg else 'Internal error'
+
 # ── Lazy SnapTrade import ─────────────────────────────────────────────────────
 # snaptrade_client takes ~6 seconds to import. We defer it until the first API
 # call so Flask is ready to serve health checks and pages immediately on start.
@@ -145,40 +156,53 @@ def snap_connect():
     except Exception as e:
         return snap_err(e)
 
-@app.route('/api/snap/accounts')
+def _creds_from_request():
+    """Extract userId/userSecret from POST body (preferred) or GET params."""
+    if request.method == 'POST':
+        data = request.get_json(silent=True) or {}
+    else:
+        data = {}
+    uid = data.get('userId') or request.args.get('userId', '')
+    usec = data.get('userSecret') or request.args.get('userSecret', '')
+    return uid.strip(), usec.strip(), data
+
+@app.route('/api/snap/accounts', methods=['GET', 'POST'])
 def snap_accounts():
     client = get_snap_client()
     if not client:
         return jsonify({'error': 'SnapTrade not configured'}), 503
-    uid = request.args.get('userId', '').strip()
-    usec = request.args.get('userSecret', '').strip()
+    uid, usec, _ = _creds_from_request()
+    if not uid or not usec:
+        return jsonify({'error': 'userId and userSecret required'}), 400
     try:
         resp = client.account_information.list_user_accounts(user_id=uid, user_secret=usec)
         return jsonify(resp.body)
     except Exception as e:
         return snap_err(e)
 
-@app.route('/api/snap/positions')
+@app.route('/api/snap/positions', methods=['GET', 'POST'])
 def snap_positions():
     client = get_snap_client()
     if not client:
         return jsonify({'error': 'SnapTrade not configured'}), 503
-    uid = request.args.get('userId', '').strip()
-    usec = request.args.get('userSecret', '').strip()
+    uid, usec, _ = _creds_from_request()
+    if not uid or not usec:
+        return jsonify({'error': 'userId and userSecret required'}), 400
     try:
         resp = client.account_information.get_all_user_holdings(user_id=uid, user_secret=usec)
         return jsonify(resp.body)
     except Exception as e:
         return snap_err(e)
 
-@app.route('/api/snap/balances')
+@app.route('/api/snap/balances', methods=['GET', 'POST'])
 def snap_balances():
     client = get_snap_client()
     if not client:
         return jsonify({'error': 'SnapTrade not configured'}), 503
-    uid = request.args.get('userId', '').strip()
-    usec = request.args.get('userSecret', '').strip()
-    acct_id = request.args.get('accountId', '').strip()
+    uid, usec, data = _creds_from_request()
+    if not uid or not usec:
+        return jsonify({'error': 'userId and userSecret required'}), 400
+    acct_id = (data.get('accountId') or request.args.get('accountId', '')).strip()
     try:
         if acct_id:
             resp = client.account_information.get_user_account_balance(
@@ -189,14 +213,15 @@ def snap_balances():
     except Exception as e:
         return snap_err(e)
 
-@app.route('/api/snap/activities')
+@app.route('/api/snap/activities', methods=['GET', 'POST'])
 def snap_activities():
     client = get_snap_client()
     if not client:
         return jsonify({'error': 'SnapTrade not configured'}), 503
-    uid = request.args.get('userId', '').strip()
-    usec = request.args.get('userSecret', '').strip()
-    start = request.args.get('startDate', '')
+    uid, usec, data = _creds_from_request()
+    if not uid or not usec:
+        return jsonify({'error': 'userId and userSecret required'}), 400
+    start = (data.get('startDate') or request.args.get('startDate', '')).strip()
     try:
         kwargs = {'user_id': uid, 'user_secret': usec}
         if start:
@@ -208,15 +233,14 @@ def snap_activities():
 
 # ── SnapTrade symbol search ───────────────────────────────────────────────────
 
-@app.route('/api/snap/symbols')
+@app.route('/api/snap/symbols', methods=['GET', 'POST'])
 def snap_symbols():
     client = get_snap_client()
     if not client:
         return jsonify({'error': 'SnapTrade not configured'}), 503
-    query = request.args.get('q', '').strip()
-    uid = request.args.get('userId', '').strip()
-    usec = request.args.get('userSecret', '').strip()
-    acct_id = request.args.get('accountId', '').strip()
+    uid, usec, data = _creds_from_request()
+    query = (data.get('q') or request.args.get('q', '')).strip()
+    acct_id = (data.get('accountId') or request.args.get('accountId', '')).strip()
     if not query:
         return jsonify([])
     try:
@@ -349,15 +373,16 @@ def snap_order_cancel():
     except Exception as e:
         return snap_err(e)
 
-@app.route('/api/snap/orders')
+@app.route('/api/snap/orders', methods=['GET', 'POST'])
 def snap_orders():
     client = get_snap_client()
     if not client:
         return jsonify({'error': 'SnapTrade not configured'}), 503
-    uid = request.args.get('userId', '').strip()
-    usec = request.args.get('userSecret', '').strip()
-    acct_id = request.args.get('accountId', '').strip()
-    state = request.args.get('state', 'all')
+    uid, usec, data = _creds_from_request()
+    if not uid or not usec:
+        return jsonify({'error': 'userId and userSecret required'}), 400
+    acct_id = (data.get('accountId') or request.args.get('accountId', '')).strip()
+    state = (data.get('state') or request.args.get('state', 'all')).strip()
     try:
         resp = client.account_information.get_user_account_orders(
             user_id=uid, user_secret=usec,
@@ -367,15 +392,16 @@ def snap_orders():
     except Exception as e:
         return snap_err(e)
 
-@app.route('/api/snap/quote')
+@app.route('/api/snap/quote', methods=['GET', 'POST'])
 def snap_quote():
     client = get_snap_client()
     if not client:
         return jsonify({'error': 'SnapTrade not configured'}), 503
-    uid = request.args.get('userId', '').strip()
-    usec = request.args.get('userSecret', '').strip()
-    acct_id = request.args.get('accountId', '').strip()
-    symbols = request.args.get('symbols', '').strip()
+    uid, usec, data = _creds_from_request()
+    if not uid or not usec:
+        return jsonify({'error': 'userId and userSecret required'}), 400
+    acct_id = (data.get('accountId') or request.args.get('accountId', '')).strip()
+    symbols = (data.get('symbols') or request.args.get('symbols', '')).strip()
     if not symbols or not acct_id:
         return jsonify({'error': 'symbols and accountId required'}), 400
     try:
