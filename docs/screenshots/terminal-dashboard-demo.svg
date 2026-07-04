@@ -1,0 +1,108 @@
+<svg viewBox="0 0 1200 720" xmlns="http://www.w3.org/2000/svg" font-family="'Courier New', monospace">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0a0e17"/>
+      <stop offset="100%" stop-color="#0d1220"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#131a2b"/>
+      <stop offset="100%" stop-color="#0f1524"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="720" fill="url(#bg)"/>
+
+  <!-- Top bar -->
+  <rect x="0" y="0" width="1200" height="56" fill="#0d1220"/>
+  <rect x="0" y="54" width="1200" height="2" fill="#2dd4bf"/>
+  <text x="24" y="35" fill="#e2e8f0" font-size="20" font-weight="bold" letter-spacing="1">NEXUSSPHERE</text>
+  <text x="200" y="35" fill="#5b6b8c" font-size="13">GLOBAL MACRO TERMINAL</text>
+  <text x="1000" y="35" fill="#4ade80" font-size="12">● LIVE</text>
+  <text x="1080" y="35" fill="#5b6b8c" font-size="12">DEMO DATA</text>
+
+  <!-- Tab bar -->
+  <g font-size="11" fill="#8b9bc1">
+    <rect x="0" y="56" width="1200" height="30" fill="#0a0e17"/>
+    <text x="24" y="76" fill="#2dd4bf" font-weight="bold">PORTFOLIO</text>
+    <text x="130" y="76">MARKET CYCLE</text>
+    <text x="250" y="76">NEWS &amp; SENTIMENT</text>
+    <text x="400" y="76">RISK</text>
+    <text x="460" y="76">GOALS</text>
+    <text x="530" y="76">SANDBOX</text>
+    <text x="620" y="76">EARNINGS</text>
+    <text x="710" y="76">QUANT MODELS</text>
+    <text x="840" y="76">PREDICTION MKT</text>
+    <text x="970" y="76">SCREENER</text>
+    <text x="1070" y="76">BIG MAC</text>
+  </g>
+
+  <!-- Portfolio summary panel -->
+  <rect x="20" y="100" width="380" height="180" rx="6" fill="url(#panel)" stroke="#1e293b"/>
+  <text x="40" y="128" fill="#8b9bc1" font-size="11" letter-spacing="1">PORTFOLIO VALUE (DEMO)</text>
+  <text x="40" y="162" fill="#e2e8f0" font-size="34" font-weight="bold">$24,180.00</text>
+  <text x="40" y="185" fill="#4ade80" font-size="14">▲ +$412.30 (+1.73%) today</text>
+  <line x1="40" y1="200" x2="360" y2="200" stroke="#1e293b"/>
+  <g font-size="12">
+    <text x="40" y="222" fill="#8b9bc1">DEMO-A</text><text x="260" y="222" fill="#e2e8f0">$6,240</text><text x="340" y="222" fill="#4ade80">+2.1%</text>
+    <text x="40" y="242" fill="#8b9bc1">DEMO-B</text><text x="260" y="242" fill="#e2e8f0">$5,910</text><text x="340" y="242" fill="#f87171">-0.8%</text>
+    <text x="40" y="262" fill="#8b9bc1">DEMO-C</text><text x="260" y="262" fill="#e2e8f0">$4,530</text><text x="340" y="262" fill="#4ade80">+3.4%</text>
+  </g>
+
+  <!-- Market cycle gauge -->
+  <rect x="420" y="100" width="360" height="180" rx="6" fill="url(#panel)" stroke="#1e293b"/>
+  <text x="440" y="128" fill="#8b9bc1" font-size="11" letter-spacing="1">MARKET CYCLE ENGINE</text>
+  <circle cx="600" cy="210" r="60" fill="none" stroke="#1e293b" stroke-width="10"/>
+  <path d="M 600 150 A 60 60 0 0 1 648 195" fill="none" stroke="#2dd4bf" stroke-width="10" stroke-linecap="round"/>
+  <text x="600" y="215" fill="#e2e8f0" font-size="16" text-anchor="middle" font-weight="bold">EXPANSION</text>
+  <text x="600" y="232" fill="#8b9bc1" font-size="10" text-anchor="middle">confidence: 68%</text>
+
+  <!-- Risk analytics panel -->
+  <rect x="800" y="100" width="380" height="180" rx="6" fill="url(#panel)" stroke="#1e293b"/>
+  <text x="820" y="128" fill="#8b9bc1" font-size="11" letter-spacing="1">RISK ANALYTICS</text>
+  <g font-size="12">
+    <text x="820" y="155" fill="#8b9bc1">Beta (vs. benchmark)</text><text x="1140" y="155" fill="#e2e8f0" text-anchor="end">0.94</text>
+    <text x="820" y="178" fill="#8b9bc1">Sharpe Ratio</text><text x="1140" y="178" fill="#e2e8f0" text-anchor="end">1.21</text>
+    <text x="820" y="201" fill="#8b9bc1">Max Drawdown</text><text x="1140" y="201" fill="#f87171" text-anchor="end">-8.4%</text>
+    <text x="820" y="224" fill="#8b9bc1">VaR (95%, 1d)</text><text x="1140" y="224" fill="#e2e8f0" text-anchor="end">$412</text>
+    <text x="820" y="247" fill="#8b9bc1">Portfolio Volatility</text><text x="1140" y="247" fill="#e2e8f0" text-anchor="end">14.2%</text>
+  </g>
+
+  <!-- Quant models chart panel -->
+  <rect x="20" y="300" width="570" height="220" rx="6" fill="url(#panel)" stroke="#1e293b"/>
+  <text x="40" y="328" fill="#8b9bc1" font-size="11" letter-spacing="1">QUANT MODELS — MOMENTUM SIGNAL (DEMO)</text>
+  <polyline points="40,470 90,455 140,460 190,430 240,440 290,400 340,410 390,380 440,390 490,360 540,370" fill="none" stroke="#2dd4bf" stroke-width="2.5"/>
+  <polyline points="40,480 90,478 140,470 190,468 240,455 290,450 340,445 390,440 440,435 490,428 540,420" fill="none" stroke="#5b6b8c" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <line x1="40" y1="500" x2="560" y2="500" stroke="#1e293b"/>
+  <text x="40" y="510" fill="#5b6b8c" font-size="9">JAN</text>
+  <text x="540" y="510" fill="#5b6b8c" font-size="9">DEC</text>
+
+  <!-- Prediction market panel -->
+  <rect x="610" y="300" width="290" height="220" rx="6" fill="url(#panel)" stroke="#1e293b"/>
+  <text x="630" y="328" fill="#8b9bc1" font-size="11" letter-spacing="1">PREDICTION MARKET BOT</text>
+  <text x="630" y="360" fill="#e2e8f0" font-size="13">"Sample event resolves YES"</text>
+  <rect x="630" y="375" width="240" height="14" rx="4" fill="#1e293b"/>
+  <rect x="630" y="375" width="156" height="14" rx="4" fill="#2dd4bf"/>
+  <text x="630" y="405" fill="#8b9bc1" font-size="11">Model confidence: 65%</text>
+  <text x="630" y="425" fill="#8b9bc1" font-size="11">Market price: 58%</text>
+  <text x="630" y="450" fill="#4ade80" font-size="12">Edge detected: +7pp</text>
+
+  <!-- Stock screener panel -->
+  <rect x="910" y="300" width="270" height="220" rx="6" fill="url(#panel)" stroke="#1e293b"/>
+  <text x="930" y="328" fill="#8b9bc1" font-size="11" letter-spacing="1">SCREENER — TSX + US (DEMO)</text>
+  <g font-size="11">
+    <text x="930" y="355" fill="#5b6b8c">SYM</text><text x="1010" y="355" fill="#5b6b8c">P/E</text><text x="1080" y="355" fill="#5b6b8c">CHG</text>
+    <text x="930" y="378" fill="#e2e8f0">SAMP-1</text><text x="1010" y="378" fill="#e2e8f0">14.2</text><text x="1080" y="378" fill="#4ade80">+2.4%</text>
+    <text x="930" y="398" fill="#e2e8f0">SAMP-2</text><text x="1010" y="398" fill="#e2e8f0">22.7</text><text x="1080" y="398" fill="#f87171">-1.1%</text>
+    <text x="930" y="418" fill="#e2e8f0">SAMP-3</text><text x="1010" y="418" fill="#e2e8f0">9.8</text><text x="1080" y="418" fill="#4ade80">+0.6%</text>
+    <text x="930" y="438" fill="#e2e8f0">SAMP-4</text><text x="1010" y="438" fill="#e2e8f0">31.5</text><text x="1080" y="438" fill="#4ade80">+4.9%</text>
+  </g>
+
+  <!-- Footer -->
+  <rect x="20" y="540" width="1160" height="160" rx="6" fill="url(#panel)" stroke="#1e293b"/>
+  <text x="40" y="568" fill="#8b9bc1" font-size="11" letter-spacing="1">NEWS &amp; SENTIMENT — AI SUMMARIZED (DEMO)</text>
+  <text x="40" y="595" fill="#e2e8f0" font-size="12">"Sample headline about a demo sector rotation into value stocks"</text>
+  <text x="40" y="615" fill="#5b6b8c" font-size="11">Sentiment: Neutral-Positive · Confidence: 71% · Source: sample-feed</text>
+  <text x="40" y="645" fill="#e2e8f0" font-size="12">"Another sample headline referencing demo commodity price movement"</text>
+  <text x="40" y="665" fill="#5b6b8c" font-size="11">Sentiment: Negative · Confidence: 58% · Source: sample-feed</text>
+
+  <text x="600" y="712" fill="#3d4a63" font-size="10" text-anchor="middle">All figures shown are illustrative demo data — not real portfolio holdings</text>
+</svg>
