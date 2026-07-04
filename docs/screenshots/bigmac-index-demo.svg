@@ -1,0 +1,112 @@
+<svg viewBox="0 0 1200 680" xmlns="http://www.w3.org/2000/svg" font-family="'Courier New', monospace">
+  <defs>
+    <linearGradient id="bg2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0a0e17"/>
+      <stop offset="100%" stop-color="#0d1220"/>
+    </linearGradient>
+    <linearGradient id="panel2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#131a2b"/>
+      <stop offset="100%" stop-color="#0f1524"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="680" fill="url(#bg2)"/>
+
+  <!-- Top bar -->
+  <rect x="0" y="0" width="1200" height="56" fill="#0d1220"/>
+  <rect x="0" y="54" width="1200" height="2" fill="#f5a623"/>
+  <text x="24" y="35" fill="#e2e8f0" font-size="20" font-weight="bold" letter-spacing="1">BIG MAC INDEX</text>
+  <text x="270" y="35" fill="#5b6b8c" font-size="13">CURRENCY VALUATION EXPLORER</text>
+  <text x="1080" y="35" fill="#5b6b8c" font-size="12">ILLUSTRATIVE DATA</text>
+
+  <!-- View toggle -->
+  <g font-size="11" fill="#8b9bc1">
+    <rect x="0" y="56" width="1200" height="30" fill="#0a0e17"/>
+    <text x="24" y="76" fill="#f5a623" font-weight="bold">WORLD MAP</text>
+    <text x="140" y="76">BAR CHART</text>
+    <text x="240" y="76">TREND COMPARISON</text>
+    <text x="400" y="76">COUNTRY RANKINGS</text>
+  </g>
+
+  <!-- Stylized "world map" as a tile grid, colored by valuation -->
+  <rect x="20" y="100" width="700" height="330" rx="6" fill="url(#panel2)" stroke="#1e293b"/>
+  <text x="40" y="128" fill="#8b9bc1" font-size="11" letter-spacing="1">RELATIVE CURRENCY VALUATION (illustrative)</text>
+
+  <!-- grid of country tiles, simple geometric world-ish layout -->
+  <g font-size="9" text-anchor="middle">
+    <!-- North America -->
+    <rect x="60" y="160" width="50" height="34" rx="3" fill="#f87171"/><text x="85" y="181" fill="#0a0e17">USA</text>
+    <rect x="115" y="160" width="50" height="34" rx="3" fill="#fbbf7d"/><text x="140" y="181" fill="#0a0e17">CAN</text>
+    <rect x="60" y="198" width="50" height="34" rx="3" fill="#4ade80"/><text x="85" y="219" fill="#0a0e17">MEX</text>
+    <!-- South America -->
+    <rect x="115" y="198" width="50" height="34" rx="3" fill="#4ade80"/><text x="140" y="219" fill="#0a0e17">BRA</text>
+    <rect x="60" y="236" width="50" height="34" rx="3" fill="#22d3a0"/><text x="85" y="257" fill="#0a0e17">ARG</text>
+    <!-- Europe -->
+    <rect x="260" y="150" width="50" height="34" rx="3" fill="#fbbf7d"/><text x="285" y="171" fill="#0a0e17">GBR</text>
+    <rect x="315" y="150" width="50" height="34" rx="3" fill="#f5a623"/><text x="340" y="171" fill="#0a0e17">EUR</text>
+    <rect x="370" y="150" width="50" height="34" rx="3" fill="#fbbf7d"/><text x="395" y="171" fill="#0a0e17">CHE</text>
+    <rect x="260" y="188" width="50" height="34" rx="3" fill="#4ade80"/><text x="285" y="209" fill="#0a0e17">POL</text>
+    <!-- Africa -->
+    <rect x="300" y="236" width="50" height="34" rx="3" fill="#22d3a0"/><text x="325" y="257" fill="#0a0e17">ZAF</text>
+    <rect x="355" y="236" width="50" height="34" rx="3" fill="#4ade80"/><text x="380" y="257" fill="#0a0e17">EGY</text>
+    <rect x="300" y="274" width="50" height="34" rx="3" fill="#22d3a0"/><text x="325" y="295" fill="#0a0e17">KEN</text>
+    <rect x="355" y="274" width="50" height="34" rx="3" fill="#22d3a0"/><text x="380" y="295" fill="#0a0e17">TZA</text>
+    <!-- Asia -->
+    <rect x="480" y="160" width="50" height="34" rx="3" fill="#f5a623"/><text x="505" y="181" fill="#0a0e17">JPN</text>
+    <rect x="535" y="160" width="50" height="34" rx="3" fill="#22d3a0"/><text x="560" y="181" fill="#0a0e17">CHN</text>
+    <rect x="590" y="160" width="50" height="34" rx="3" fill="#22d3a0"/><text x="615" y="181" fill="#0a0e17">IND</text>
+    <rect x="480" y="198" width="50" height="34" rx="3" fill="#fbbf7d"/><text x="505" y="219" fill="#0a0e17">SGP</text>
+    <rect x="535" y="198" width="50" height="34" rx="3" fill="#4ade80"/><text x="560" y="219" fill="#0a0e17">IDN</text>
+    <!-- Oceania -->
+    <rect x="590" y="270" width="50" height="34" rx="3" fill="#fbbf7d"/><text x="615" y="291" fill="#0a0e17">AUS</text>
+  </g>
+  <!-- legend -->
+  <g font-size="9" fill="#8b9bc1">
+    <text x="40" y="410">OVERVALUED</text>
+    <rect x="130" y="401" width="14" height="10" fill="#f87171"/>
+    <rect x="150" y="401" width="14" height="10" fill="#f5a623"/>
+    <rect x="170" y="401" width="14" height="10" fill="#fbbf7d"/>
+    <rect x="190" y="401" width="14" height="10" fill="#4ade80"/>
+    <rect x="210" y="401" width="14" height="10" fill="#22d3a0"/>
+    <text x="235" y="410">UNDERVALUED</text>
+  </g>
+
+  <!-- Country rankings bar chart -->
+  <rect x="740" y="100" width="440" height="330" rx="6" fill="url(#panel2)" stroke="#1e293b"/>
+  <text x="760" y="128" fill="#8b9bc1" font-size="11" letter-spacing="1">COUNTRY RANKINGS — % OVER/UNDERVALUED (illustrative)</text>
+  <line x1="960" y1="150" x2="960" y2="400" stroke="#1e293b"/>
+  <g font-size="11">
+    <text x="770" y="168" fill="#e2e8f0">Switzerland</text>
+    <rect x="960" y="158" width="110" height="14" fill="#f87171"/><text x="1078" y="168" fill="#f87171">+38%</text>
+
+    <text x="770" y="196" fill="#e2e8f0">United States</text>
+    <rect x="960" y="186" width="20" height="14" fill="#fbbf7d"/><text x="988" y="196" fill="#fbbf7d">+3%</text>
+
+    <text x="770" y="224" fill="#e2e8f0">Eurozone</text>
+    <rect x="960" y="214" width="8" height="14" fill="#fbbf7d"/><text x="976" y="224" fill="#fbbf7d">+1%</text>
+
+    <text x="770" y="252" fill="#e2e8f0">Canada</text>
+    <rect x="880" y="242" width="80" height="14" fill="#4ade80"/><text x="856" y="252" fill="#4ade80" text-anchor="end">-14%</text>
+
+    <text x="770" y="280" fill="#e2e8f0">Kenya</text>
+    <rect x="800" y="270" width="160" height="14" fill="#22d3a0"/><text x="776" y="280" fill="#22d3a0" text-anchor="end">-28%</text>
+
+    <text x="770" y="308" fill="#e2e8f0">Tanzania</text>
+    <rect x="780" y="298" width="180" height="14" fill="#22d3a0"/><text x="756" y="308" fill="#22d3a0" text-anchor="end">-32%</text>
+
+    <text x="770" y="336" fill="#e2e8f0">South Africa</text>
+    <rect x="820" y="326" width="140" height="14" fill="#22d3a0"/><text x="796" y="336" fill="#22d3a0" text-anchor="end">-24%</text>
+
+    <text x="770" y="364" fill="#e2e8f0">India</text>
+    <rect x="790" y="354" width="170" height="14" fill="#22d3a0"/><text x="766" y="364" fill="#22d3a0" text-anchor="end">-30%</text>
+  </g>
+
+  <!-- Trend comparison strip -->
+  <rect x="20" y="450" width="1160" height="200" rx="6" fill="url(#panel2)" stroke="#1e293b"/>
+  <text x="40" y="478" fill="#8b9bc1" font-size="11" letter-spacing="1">TREND COMPARISON — SELECTED CURRENCIES (illustrative, 12mo)</text>
+  <polyline points="60,600 160,590 260,595 360,570 460,580 560,555 660,565 760,540 860,550 960,520 1060,530 1160,510" fill="none" stroke="#f5a623" stroke-width="2.5"/>
+  <polyline points="60,610 160,608 260,605 360,600 460,598 560,592 660,590 760,585 860,580 960,575 1060,570 1160,565" fill="none" stroke="#22d3a0" stroke-width="2.5"/>
+  <text x="1080" y="500" fill="#f5a623" font-size="10">USD/CHF</text>
+  <text x="1080" y="580" fill="#22d3a0" font-size="10">USD/TZS</text>
+
+  <text x="600" y="672" fill="#3d4a63" font-size="10" text-anchor="middle">Figures are illustrative approximations for demonstration purposes, not live index values</text>
+</svg>
