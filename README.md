@@ -64,7 +64,7 @@ NexusSphere is a two-page Flask application that goes well beyond a typical port
 ### Installation
 
 ```bash
-git clone https://github.com/creova-gif/NexusSphere.git
+git clone https://github.com/creova-gif/nexus-sphere.git
 cd NexusSphere
 # dependency management via uv (see pyproject.toml / uv.lock)
 uv sync
